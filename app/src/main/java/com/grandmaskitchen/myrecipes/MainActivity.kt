@@ -4,6 +4,8 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import com.grandmaskitchen.myrecipes.database.RecipesDatabase
 import com.grandmaskitchen.myrecipes.databinding.ActivityMainBinding
@@ -17,7 +19,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var recipeViewModel: RecipeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Splash Screen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            installSplashScreen()
+        }
+
         super.onCreate(savedInstanceState)
+
 
 
         // Изменение цвета статус-бара
