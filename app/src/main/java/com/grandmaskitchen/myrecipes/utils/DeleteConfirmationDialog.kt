@@ -27,7 +27,7 @@ class DeleteConfirmationDialog: DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+// Используй viewBinding везде findViewById почти нигде не используется)
         val okBtn = view.findViewById<ImageButton>(R.id.ok_btn)
         val notBtn = view.findViewById<ImageButton>(R.id.not_btn)
 

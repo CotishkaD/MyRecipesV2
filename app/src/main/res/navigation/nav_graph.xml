@@ -25,6 +25,7 @@
         <argument
             android:name="categoryStringId"
             app:argType="integer" />
+<!-- Зачем такая навигации? Ты не вернешься назад, а откорешь новый экран. Удаляй-->
         <action
             android:id="@+id/action_recipesFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
