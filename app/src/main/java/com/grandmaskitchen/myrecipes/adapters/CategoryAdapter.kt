@@ -9,11 +9,13 @@ import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.grandmaskitchen.myrecipes.R
+import com.grandmaskitchen.myrecipes.databinding.CategoryCardItemBinding
 import com.grandmaskitchen.myrecipes.fragments.HomeFragmentDirections
 import com.grandmaskitchen.myrecipes.model.CategoriesModel
 
 class CategoryAdapter(val categoriesList: ArrayList<CategoriesModel>) : RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>(){
-
+// Почему здесь не используешь viewBinding?
+//inner class CategoryViewHolder(binding: CategoryCardItemBinding) : RecyclerView.ViewHolder(binding.root) {
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imgCard: ImageView = itemView.findViewById(R.id.categoryImage)
@@ -45,6 +47,7 @@ class CategoryAdapter(val categoriesList: ArrayList<CategoriesModel>) : Recycler
     }
 
     companion object {
+        // Этот список должен находится в репозитории! Это же данные! И запихни это все в БД для тренировки)
         fun createDefaultCategories(): ArrayList<CategoriesModel> {
             return arrayListOf(
                 CategoriesModel(R.drawable.category_soup, R.string.soups, "soup"),

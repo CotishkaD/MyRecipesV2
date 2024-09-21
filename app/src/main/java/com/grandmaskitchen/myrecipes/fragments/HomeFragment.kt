@@ -11,7 +11,7 @@ import com.grandmaskitchen.myrecipes.R
 import com.grandmaskitchen.myrecipes.adapters.CategoryAdapter
 import com.grandmaskitchen.myrecipes.databinding.FragmentHomeBinding
 import com.grandmaskitchen.myrecipes.model.CategoriesModel
-
+// При viewBinding передавать layout в конструктор Fragment не надо
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding : FragmentHomeBinding? = null
