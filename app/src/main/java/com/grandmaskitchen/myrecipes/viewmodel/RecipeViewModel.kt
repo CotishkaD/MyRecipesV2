@@ -23,13 +23,6 @@ class RecipeViewModel(app: Application, private val recipesRepository: RecipesRe
     init {
         Log.d("TAG", "RecipeViewModel create ${hashCode()} ")
     }
-    fun addRecipe(recipeModel: RecipeModel) = viewModelScope.launch {
-        recipesRepository.insertRecipe(recipeModel)
-    }
-
-    fun updateRecipe(recipeModel: RecipeModel) = viewModelScope.launch {
-        recipesRepository.updateRecipe(recipeModel)
-    }
 
     fun  deleteRecipe(recipeModel: RecipeModel) = viewModelScope.launch {
         recipesRepository.deleteRecipe(recipeModel)
@@ -37,5 +30,4 @@ class RecipeViewModel(app: Application, private val recipesRepository: RecipesRe
 
     fun getRecipeById(id: Int) = recipesRepository.getRecipeById(id)
 
-    fun getAllRecipesByCategoryName(categoryName: String) = recipesRepository.getAllRecipesByCategoryName(categoryName)
 }

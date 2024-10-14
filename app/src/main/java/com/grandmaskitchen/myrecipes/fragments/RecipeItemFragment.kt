@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,8 +18,9 @@ import com.grandmaskitchen.myrecipes.databinding.FragmentRecipeItemBinding
 import com.grandmaskitchen.myrecipes.model.RecipeModel
 import com.grandmaskitchen.myrecipes.utils.DeleteConfirmationDialog
 import com.grandmaskitchen.myrecipes.utils.IngredientUtils
+import com.grandmaskitchen.myrecipes.viewmodel.EditRecipeViewModel
 import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModel
-
+import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModelFactory
 
 
 class RecipeItemFragment : Fragment(R.layout.fragment_recipe_item) {
@@ -47,7 +49,10 @@ class RecipeItemFragment : Fragment(R.layout.fragment_recipe_item) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recipeViewModel = (activity as MainActivity).recipeViewModel
+        val app = requireActivity().application
+        val repository = (activity as MainActivity).getRecipesRepository()
+        val factory = RecipeViewModelFactory(app, repository)
+        recipeViewModel = ViewModelProvider(this, factory)[RecipeViewModel::class.java]
 
         currentRecipe = args.recipe!!
 

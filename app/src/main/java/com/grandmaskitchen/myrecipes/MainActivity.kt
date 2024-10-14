@@ -17,7 +17,6 @@ import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModelFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    lateinit var recipeViewModel: RecipeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -40,19 +39,21 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        setUpViewModel()
     }
 
-    private fun setUpViewModel() {
-        // Тут важный момент. Когда убивается активити(например при повороте экрана, или при смене темной темы на светлую)
-        // Активити пересоздается и весь код отработает еще раз. Но новая вью модель не создатся(потому что вьюмодель и создана для этого - она переживает)
-        // Я прописал логи в RecipesRepository и в RecipeViewModel
-        // Запусти приложение, потом переверни экран и увидишь что репозиторий создается сново - а нам этого не надо.
-        // Пока у тебя нет DI я написал некий код в папке di  посмотри что он делает
-        // RecipesRepository получай AppComponent.recipesRepository
-        val recipesRepository = RecipesRepository(RecipesDatabase(this).getRecipeDao())
-        val viewModelProviderFactory = RecipeViewModelFactory(application, recipesRepository)
-
-        recipeViewModel = ViewModelProvider(this, viewModelProviderFactory)[RecipeViewModel::class.java]
+    fun getRecipesRepository(): RecipesRepository {
+        return AppComponent.recipesRepository
     }
+
+//    private fun setUpRepository() {
+//        // Тут важный момент. Когда убивается активити(например при повороте экрана, или при смене темной темы на светлую)
+//        // Активити пересоздается и весь код отработает еще раз. Но новая вью модель не создатся(потому что вьюмодель и создана для этого - она переживает)
+//        // Я прописал логи в RecipesRepository и в RecipeViewModel
+//        // Запусти приложение, потом переверни экран и увидишь что репозиторий создается сново - а нам этого не надо.
+//        // Пока у тебя нет DI я написал некий код в папке di  посмотри что он делает
+//        // RecipesRepository получай AppComponent.recipesRepository
+//
+//        val recipesRepository = AppComponent.recipesRepository
+//
+//    }
 }

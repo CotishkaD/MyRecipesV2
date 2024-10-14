@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +14,9 @@ import com.grandmaskitchen.myrecipes.R
 import com.grandmaskitchen.myrecipes.adapters.RecipeAdapter
 import com.grandmaskitchen.myrecipes.databinding.FragmentHomeBinding
 import com.grandmaskitchen.myrecipes.databinding.FragmentRecipesBinding
+import com.grandmaskitchen.myrecipes.viewmodel.AllRecipesViewModel
 import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModel
+import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModelFactory
 
 
 class AllRecipesFragment : Fragment(R.layout.fragment_recipes) {
@@ -22,7 +25,7 @@ class AllRecipesFragment : Fragment(R.layout.fragment_recipes) {
     private val binding get() = _binding!!
 
     private lateinit var recipeAdapter: RecipeAdapter
-    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var allRecipesViewModel: AllRecipesViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,10 @@ class AllRecipesFragment : Fragment(R.layout.fragment_recipes) {
     ): View? {
         _binding = FragmentRecipesBinding.inflate(inflater, container, false)
 
-        recipeViewModel = (activity as MainActivity).recipeViewModel
+        val app = requireActivity().application
+        val repository = (activity as MainActivity).getRecipesRepository()
+        val factory = RecipeViewModelFactory(app, repository)
+        allRecipesViewModel = ViewModelProvider(this, factory)[AllRecipesViewModel::class.java]
 
         setupRecyclerView()
 
@@ -46,7 +52,8 @@ class AllRecipesFragment : Fragment(R.layout.fragment_recipes) {
         binding.recipesTopBarTextView.text = getString(categoryStringId)
 
         binding.backButton.setOnClickListener{
-            findNavController().navigate(R.id.action_recipesFragment_to_homeFragment)
+            val action = AllRecipesFragmentDirections.actionRecipesFragmentToHomeFragment()
+            it.findNavController().navigate(action)
         }
 
         binding.addFabButton.setOnClickListener{
@@ -66,7 +73,7 @@ class AllRecipesFragment : Fragment(R.layout.fragment_recipes) {
 
 
         val categoryName = arguments?.getString("categoryName") ?: "Default Category"
-        recipeViewModel.getAllRecipesByCategoryName(categoryName).observe(viewLifecycleOwner) {recipes ->
+        allRecipesViewModel.getAllRecipesByCategoryName(categoryName).observe(viewLifecycleOwner) {recipes ->
             recipeAdapter.differ.submitList(recipes)
         }
     }
