@@ -7,20 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels // Импортируйте это
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.grandmaskitchen.myrecipes.MainActivity
 import com.grandmaskitchen.myrecipes.R
 import com.grandmaskitchen.myrecipes.databinding.FragmentAddRecipeBinding
 import com.grandmaskitchen.myrecipes.model.RecipeModel
+import com.grandmaskitchen.myrecipes.viewmodel.AddRecipeViewModel
 import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModel
+import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModelFactory
 
 class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
 
     private var _binding: FragmentAddRecipeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var recipeViewModel: RecipeViewModel
+//    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var addRecipeViewModel: AddRecipeViewModel
     private lateinit var mView: View
 
 
@@ -43,7 +47,11 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recipeViewModel = (activity as MainActivity).recipeViewModel
+        val app = requireActivity().application
+        val repository = (activity as MainActivity).getRecipesRepository()
+        val factory = RecipeViewModelFactory(app, repository)
+        addRecipeViewModel = ViewModelProvider(this, factory)[AddRecipeViewModel::class.java]
+
         mView = view
     }
 
@@ -57,7 +65,7 @@ class AddRecipeFragment : Fragment(R.layout.fragment_add_recipe) {
             val categoryStringId = arguments?.getInt("categoryStringId") ?: R.string.default_string
             val recipe = RecipeModel(0, categoryName,categoryStringId, recipeName, recipeIngredients, recipeDescription)
 
-            recipeViewModel.addRecipe(recipe)
+            addRecipeViewModel.addRecipe(recipe)
 
             Toast.makeText(mView.context, "Recipe saved, name $recipeName", Toast.LENGTH_LONG).show()
 

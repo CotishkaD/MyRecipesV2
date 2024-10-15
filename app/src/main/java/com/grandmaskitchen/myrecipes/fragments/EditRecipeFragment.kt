@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -15,14 +16,17 @@ import com.grandmaskitchen.myrecipes.databinding.FragmentAddRecipeBinding
 import com.grandmaskitchen.myrecipes.databinding.FragmentEditRecipeBinding
 import com.grandmaskitchen.myrecipes.databinding.FragmentRecipesBinding
 import com.grandmaskitchen.myrecipes.model.RecipeModel
+import com.grandmaskitchen.myrecipes.viewmodel.AddRecipeViewModel
+import com.grandmaskitchen.myrecipes.viewmodel.EditRecipeViewModel
 import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModel
+import com.grandmaskitchen.myrecipes.viewmodel.RecipeViewModelFactory
 
 class EditRecipeFragment : Fragment(R.layout.fragment_edit_recipe) {
 
     private var _binding: FragmentEditRecipeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var editRecipeViewModel: EditRecipeViewModel
     private lateinit var currentRecipe: RecipeModel
     private lateinit var mView: View
 
@@ -52,7 +56,10 @@ class EditRecipeFragment : Fragment(R.layout.fragment_edit_recipe) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recipeViewModel = (activity as MainActivity).recipeViewModel
+        val app = requireActivity().application
+        val repository = (activity as MainActivity).getRecipesRepository()
+        val factory = RecipeViewModelFactory(app, repository)
+        editRecipeViewModel = ViewModelProvider(this, factory)[EditRecipeViewModel::class.java]
         mView = view
 
         currentRecipe = args.recipe!!
@@ -70,7 +77,7 @@ class EditRecipeFragment : Fragment(R.layout.fragment_edit_recipe) {
         if (nameRecipe.isNotEmpty()) {
             val updatedRecipe = RecipeModel(currentRecipe.id, currentRecipe.categoryName, currentRecipe.categoryStringId, nameRecipe, ingredients, description)
 
-            recipeViewModel.updateRecipe(updatedRecipe)
+            editRecipeViewModel.updateRecipe(updatedRecipe)
 
             val action = EditRecipeFragmentDirections.actionEditRecipeFragmentToRecipeItemFragment(updatedRecipe)
             view?.findNavController()?.navigate(action)
